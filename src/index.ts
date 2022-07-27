@@ -13,4 +13,4 @@ app.get("/", (req: Request, res: Response) => {
     res.send({ message: true })
 })
 
-app.listen(5000, () => console.log("ready"))
+app.listen(3000, () => console.log("ready"))
