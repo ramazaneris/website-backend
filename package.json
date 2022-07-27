@@ -9,9 +9,9 @@
   },
   "name": "server",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "dev": "nodemon index.ts",
+    "dev": "nodemon src/index.ts",
     "start": "vercel dev",
     "deploy": "vercel deploy --prod"
   },
