@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {},
-  "include": ["src"],
+  "include": ["index.ts"],
   "exclude": ["node_modules"]
 }
