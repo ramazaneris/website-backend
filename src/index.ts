@@ -8,7 +8,7 @@ import "dotenv/config"
 const app = express();
 
 app.use(express.json())
-app.use("/u", express.static("tmp"));
+app.use("/u", express.static("uploads"));
 
 const createUniqId = () => {
     return (
@@ -19,7 +19,7 @@ const createUniqId = () => {
 
 const storage: any = multer.diskStorage({
     destination: (req: any, res: any, cb: any) => {
-        cb(null, path.resolve("tmp"))
+        cb(null, path.resolve("uploads"))
     },
     filename: (req: any, file: any, cb: any) => {
         const { originalname } = file
@@ -35,6 +35,10 @@ app.get("/", (req: Request, res: Response) => {
 
 app.post("/upload", upload.single("images"), (req: any, res: Response) => {
     if (req.body.secret === process.env.RAMCHO_SECRET) {
+        const filename = createUniqId() + "." + req.file.originalname.split(".").pop();
+        fs.writeFileSync("./uploads/" + filename, req.file.buffer, "utf-8");
+        res.json({ message: "ok" })
+        
         if (!req.file) return res.json({ error: "File not found", status: 404 })
         console.log("istek geldi");
         console.log(req.file.filename);
