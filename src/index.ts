@@ -7,6 +7,7 @@ import "dotenv/config"
 
 const app = express();
 
+app.use(express.json())
 app.use("/u", express.static("uploads"));
 
 const createUniqId = () => {
@@ -18,7 +19,7 @@ const createUniqId = () => {
 
 const storage: any = multer.diskStorage({
     destination: (req: any, res: any, cb: any) => {
-        cb(null, "../uploads")
+        cb(null, "./uploads")
     },
     filename: (req: any, file: any, cb: any) => {
         const { originalname } = file
@@ -33,7 +34,7 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 app.post("/upload", upload.single("images"), (req: any, res: Response) => {
-    if (req.body.secret === process.env.TOKEN) {
+    if (req.body.secret === process.env.RAMCHO_SECRET) {
         console.log("istek geldi");
         console.log(req.file.filename);
         console.log(req.file);
