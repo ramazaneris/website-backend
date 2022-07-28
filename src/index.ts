@@ -19,7 +19,7 @@ const createUniqId = () => {
 
 const storage: any = multer.diskStorage({
     destination: (req: any, res: any, cb: any) => {
-        cb(null, "./uploads")
+        cb(null, path.resolve("./uploads"))
     },
     filename: (req: any, file: any, cb: any) => {
         const { originalname } = file
