@@ -15,6 +15,9 @@
     "start": "vercel dev",
     "deploy": "vercel deploy --prod"
   },
+  "engines":{
+    "node":"16.x"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
