@@ -35,10 +35,6 @@ app.get("/", (req: Request, res: Response) => {
 
 app.post("/upload", upload.single("images"), (req: any, res: Response) => {
     if (req.body.secret === process.env.RAMCHO_SECRET) {
-        const filename = createUniqId() + "." + req.file.originalname.split(".").pop();
-        fs.writeFileSync("./uploads/" + filename, req.file.buffer, "utf-8");
-        res.json({ message: "ok" })
-        
         if (!req.file) return res.json({ error: "File not found", status: 404 })
         console.log("istek geldi");
         console.log(req.file.filename);
