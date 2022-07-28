@@ -13,8 +13,8 @@ mongoose.connect(`${process.env.MONGODB_URI}`)
 const app = express();
 
 app.use(cors({
-    origin: [`${process.env.CORS_ORIGIN}`],
-    credentials:true,
+    origin: [`${process.env.CORS_ORIGIN}`, `${process.env.CORS_ORIGIN_SECOND}`],
+    credentials: true,
     methods: ["GET,POST"],
 }))
 app.use(express.json())
