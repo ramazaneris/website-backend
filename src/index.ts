@@ -30,7 +30,7 @@ app.post("/upload", upload.single("images"), (req: any, res: Response) => {
     if (req.body.secret === process.env.RAMCHO_SECRET) {
         if (!req.file) return res.json({ error: "File not found", status: 404 })
         var filename = createUniqId()
-        const file = new File({ _id: filename, buffer: req.file.buffer })
+        const file = new File({ _id: filename, buffer: req.file.buffer, type: req.file.mimetype.split("/")[1] })
         file.save()
         res.json({
             thumbnail_url: "https://ramcho.xyz/u/" + filename + "." + req.file.originalname.split(".").pop(),
@@ -46,8 +46,11 @@ app.post("/upload", upload.single("images"), (req: any, res: Response) => {
 
 app.get("/u/:id", async (req: any, res: any) => {
     try {
-        const fileId = req.params.id.split(".")[0]
-        const file: any = await File.findById(fileId)
+        const fileId = req.params.id.split(".")
+        if (fileId.length === 1) return res.status(404).json({ error: "File not found", status: 404 })
+        if (!fileId[1].match(/^(jpe?g|png|gif|mp4)$/)) return res.status(404).json({ error: "File not found", status: 404 })
+        const file: any = await File.findById(fileId[0])
+        if (file.type !== fileId[1]) return res.status(404).json({ error: "File not found", status: 404 })
         res.end(file.buffer)
     } catch (err) {
         console.log(err)
