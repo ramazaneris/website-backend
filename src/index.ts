@@ -34,6 +34,7 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 app.post("/upload", upload.single("images"), (req: any, res: Response) => {
+    if (!req.file) return res.json({ error: "File not found", status: 404 })
     if (req.body.secret === process.env.RAMCHO_SECRET) {
         console.log("istek geldi");
         console.log(req.file.filename);
