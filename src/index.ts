@@ -1,14 +1,17 @@
 'use strict';
 import express, { Request, Response } from 'express';
-import fs from 'fs';
+import fs, { renameSync } from 'fs';
 import path from 'path';
 import multer from 'multer';
 import "dotenv/config"
+import mongoose from 'mongoose'
+import File from '../schema/fileSchema'
+const config = require("../config.json")
+mongoose.connect(config["mongodb_uri"])
 
 const app = express();
 
 app.use(express.json())
-app.use("/u", express.static("uploads"));
 
 const createUniqId = () => {
     return (
@@ -16,30 +19,22 @@ const createUniqId = () => {
         Math.random().toString(36).slice(3)
     );
 };
-
-const storage: any = multer.diskStorage({
-    destination: (req: any, res: any, cb: any) => {
-        cb(null, path.resolve("uploads"))
-    },
-    filename: (req: any, file: any, cb: any) => {
-        const { originalname } = file
-        cb(null, createUniqId() + "." + originalname.split(".").pop())
-    }
-})
+const storage: any = multer.memoryStorage()
 
 const upload = multer({ storage })
 
 app.get("/", (req: Request, res: Response) => {
-    res.json({ message: true })
+    res.json({ message: "hello" })
 })
 
 app.post("/upload", upload.single("images"), (req: any, res: Response) => {
     if (req.body.secret === process.env.RAMCHO_SECRET) {
         if (!req.file) return res.json({ error: "File not found", status: 404 })
-        console.log(req.file.filename);
-        console.log(req.file);
+        var filename = createUniqId()
+        const file = new File({ _id: filename, buffer: req.file.buffer })
+        file.save()
         res.json({
-            thumbnail_url: "https://ramcho.xyz/u/" + req.file.filename.split(".")[0],
+            thumbnail_url: "https://ramcho.xyz/u/" + filename + "." + req.file.originalname.split(".").pop(),
             url: req.file.filename,
             deletion_url: "none",
             status: 200
@@ -47,6 +42,17 @@ app.post("/upload", upload.single("images"), (req: any, res: Response) => {
     } else {
         console.log(req.body.secret);
         res.json({ error: "Access denied", status: 401 });
+    }
+})
+
+app.get("/u/:id", async (req: any, res: any) => {
+    try {
+        const fileId = req.params.id.split(".")[0]
+        const file: any = await File.findById(fileId)
+        res.end(file.buffer)
+    } catch (err) {
+        console.log(err)
+        res.json({ error: "File not found", status: 404 })
     }
 })
 
