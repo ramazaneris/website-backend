@@ -8,7 +8,7 @@ import "dotenv/config"
 const app = express();
 
 app.use(express.json())
-app.use("/u", express.static("uploads"));
+app.use("/u", express.static("tmp"));
 
 const createUniqId = () => {
     return (
@@ -19,7 +19,7 @@ const createUniqId = () => {
 
 const storage: any = multer.diskStorage({
     destination: (req: any, res: any, cb: any) => {
-        cb(null, path.resolve("uploads"))
+        cb(null, path.resolve("tmp"))
     },
     filename: (req: any, file: any, cb: any) => {
         const { originalname } = file
