@@ -6,10 +6,17 @@ import multer from 'multer';
 import "dotenv/config"
 import mongoose from 'mongoose'
 import File from '../schema/fileSchema'
+import cors from 'cors'
+
 mongoose.connect(`${process.env.MONGODB_URI}`)
 
 const app = express();
 
+app.use(cors({
+    origin: [`${process.env.CORS_ORIGIN}`],
+    credentials:true,
+    methods: ["GET,POST"],
+}))
 app.use(express.json())
 
 const createUniqId = () => {
