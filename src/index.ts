@@ -6,8 +6,7 @@ import multer from 'multer';
 import "dotenv/config"
 import mongoose from 'mongoose'
 import File from '../schema/fileSchema'
-const config = require("../config.json")
-mongoose.connect(config["mongodb_uri"])
+mongoose.connect(`${process.env.MONGODB_URI}`)
 
 const app = express();
 
