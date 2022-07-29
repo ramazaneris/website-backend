@@ -41,7 +41,7 @@ app.post("/upload", upload.single("images"), (req: any, res: Response) => {
         file.save()
         res.json({
             thumbnail_url: "https://ramcho.xyz/u/" + filename,
-            url: req.file.filename,
+            url: filename,
             deletion_url: "none",
             status: 200
         });
