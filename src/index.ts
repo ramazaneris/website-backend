@@ -40,7 +40,7 @@ app.post("/upload", upload.single("images"), (req: any, res: Response) => {
         const file = new File({ _id: filename, buffer: req.file.buffer, type: req.file.mimetype })
         file.save()
         res.json({
-            thumbnail_url: "https://ramcho.xyz/u/" + filename,
+            thumbnail_url: `https://api.ramcho.xyz/u/${filename}.${req.file.mimetype.split("/")[2]}`,
             url: filename,
             deletion_url: "none",
             status: 200
