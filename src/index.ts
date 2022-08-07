@@ -61,7 +61,7 @@ app.get("/i/:id", async (req, res) => {
         res.status(403).json({ error: "Not enough id", status: 403 })
     }
 })
-app.get("/u/:id", async (req: any, res: any) => {
+app.get("/cdn/:id", async (req: any, res: any) => {
     try {
         const fileId = req.params.id.split(".")
         if (fileId.length === 1) return res.status(404).json({ error: "File not found", status: 404 })
