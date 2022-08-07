@@ -40,7 +40,7 @@ app.post("/upload", upload.single("images"), (req: any, res: Response) => {
         const file = new File({ _id: filename, buffer: req.file.buffer, type: req.file.mimetype })
         file.save()
         res.json({
-            thumbnail_url: `https://api.ramcho.xyz/u/${filename}.${req.file.mimetype.split("/")[1]}`,
+            thumbnail_url: `https://api.ramcho.xyz/cdn/${filename}.${req.file.mimetype.split("/")[1]}`,
             url: filename,
             deletion_url: "none",
             status: 200
@@ -55,7 +55,7 @@ app.get("/i/:id", async (req, res) => {
     try {
         const file: any = await File.findById(req.params.id)
         if (!req.params.id) return res.status(403).json({ error: "Not enough id" })
-        res.json({ filename: file._id, type: file.type, url: `https://api.ramcho.xyz/u/${file._id}.${file.type.split("/")[1]}` })
+        res.json({ filename: file._id, type: file.type, url: `https://api.ramcho.xyz/cdn/${file._id}.${file.type.split("/")[1]}` })
     } catch (err) {
         console.log(err)
         res.status(403).json({ error: "Not enough id", status: 403 })
