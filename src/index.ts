@@ -38,13 +38,15 @@ app.post("/upload", upload.single("images"), (req: any, res: Response) => {
         if (!req.file) return res.json({ error: "File not found", status: 404 })
         var filename = createUniqId()
         const file = new File({ _id: filename, buffer: req.file.buffer, type: req.file.mimetype })
-        file.save()
-        res.json({
-            thumbnail_url: `https://api.ramcho.xyz/cdn/${filename}.${req.file.mimetype.split("/")[1]}`,
-            url: filename,
-            deletion_url: "none",
-            status: 200
-        });
+        file.save((err, file) => {
+            if (err) return res.json({ error: "The file is not saved, something is wrong." });
+            res.json({
+                thumbnail_url: `https://api.ramcho.xyz/cdn/${filename}.${req.file.mimetype.split("/")[1]}`,
+                url: filename,
+                deletion_url: "none",
+                status: 200
+            });
+        })
     } else {
         console.log(req.body.secret);
         res.json({ error: "Access denied", status: 401 });
