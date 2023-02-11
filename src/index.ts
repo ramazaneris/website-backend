@@ -41,7 +41,7 @@ app.post("/upload", upload.single("images"), (req: any, res: Response) => {
         file.save((err, file) => {
             if (err) return res.json({ error: "The file is not saved, something is wrong." });
             res.json({
-                thumbnail_url: `https://api.ramcho.xyz/cdn/${filename}.${req.file.mimetype.split("/")[1]}`,
+                thumbnail_url: `${process.env.API_URI}/cdn/${filename}.${req.file.mimetype.split("/")[1]}`,
                 url: filename,
                 deletion_url: "none",
                 status: 200
@@ -57,7 +57,7 @@ app.get("/i/:id", async (req, res) => {
     try {
         const file: any = await File.findById(req.params.id)
         if (!req.params.id) return res.status(403).json({ error: "Not enough id" })
-        res.json({ filename: file._id, type: file.type, url: `https://api.ramcho.xyz/cdn/${file._id}.${file.type.split("/")[1]}` })
+        res.json({ filename: file._id, type: file.type, url: `${process.env.API_URI}/cdn/${file._id}.${file.type.split("/")[1]}` })
     } catch (err) {
         console.log(err)
         res.status(403).json({ error: "Not enough id", status: 403 })
