@@ -88,7 +88,11 @@ app.get("/cdn/:id", async (req: any, res: any) => {
     const file: any = await File.findById(fileId[0]);
     if (file.type.split("/")[1] !== fileId[1])
       return res.status(404).json({ error: "File not found", status: 404 });
-    res.header("Content-Type", "image/" + fileId[1]);
+    if (fileId[1] === "mp4") {
+      res.header("Content-Type", "video/mp4");
+    } else {
+      res.header("Content-Type", "image/" + fileId[1]);
+    }
     res.end(file.buffer);
   } catch (err) {
     console.log(err);
